@@ -73,7 +73,12 @@ static mrb_value m_handle_installed_p(mrb_state *mrb, mrb_value self) {
   }
   db = alpm_get_localdb(handle);
   pkg = alpm_db_get_pkg(db, name);
-  return pkg == NULL ? mrb_false_value() : mrb_true_value();
+  if (pkg == NULL) {
+    return mrb_false_value();
+  } else {
+    alpm_pkg_free(pkg);
+    return mrb_true_value();
+  }
 }
 
 static mrb_value m_handle_installed_version(mrb_state *mrb, mrb_value self) {
@@ -88,8 +93,13 @@ static mrb_value m_handle_installed_version(mrb_state *mrb, mrb_value self) {
   }
   db = alpm_get_localdb(handle);
   pkg = alpm_db_get_pkg(db, name);
-  return pkg == NULL ? mrb_nil_value()
-                     : mrb_str_new_cstr(mrb, alpm_pkg_get_version(pkg));
+  if (pkg == NULL) {
+    return mrb_nil_value();
+  } else {
+    mrb_value version = mrb_str_new_cstr(mrb, alpm_pkg_get_version(pkg));
+    alpm_pkg_free(pkg);
+    return version;
+  }
 }
 
 void mrb_mitamae_pacman_gem_init(mrb_state *mrb) {
