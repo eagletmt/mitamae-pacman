@@ -1,5 +1,5 @@
 # mitamae-pacman
-Provide MItamae::InlineBackends::Pacman for faster package management
+Provide MItamae::InlineBackends::PacmanBackend for faster package management
 
 ## Supported functions
 
