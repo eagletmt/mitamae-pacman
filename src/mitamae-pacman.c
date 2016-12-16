@@ -102,6 +102,26 @@ static mrb_value m_handle_installed_version(mrb_state *mrb, mrb_value self) {
   }
 }
 
+static mrb_value m_handle_group_installed_p(mrb_state *mrb, mrb_value self) {
+  alpm_handle_t *handle;
+  char *name;
+  alpm_db_t *db;
+  alpm_group_t *group;
+
+  mrb_get_args(mrb, "z", &name);
+  handle = unwrap_alpm_handle(mrb, self);
+  if (handle == NULL) {
+    mrb_raise(mrb, E_RUNTIME_ERROR, "alpm_handle_t isn't initialized");
+  }
+  db = alpm_get_localdb(handle);
+  group = alpm_db_get_group(db, name);
+  if (group == NULL) {
+    return mrb_false_value();
+  } else {
+    return mrb_true_value();
+  }
+}
+
 void mrb_mitamae_pacman_gem_init(mrb_state *mrb) {
   struct RClass *alpm = mrb_define_module(mrb, "Alpm");
   struct RClass *handle =
@@ -118,6 +138,8 @@ void mrb_mitamae_pacman_gem_init(mrb_state *mrb) {
                     MRB_ARGS_REQ(1));
   mrb_define_method(mrb, handle, "installed_version",
                     m_handle_installed_version, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, handle, "group_installed?", m_handle_group_installed_p,
+                    MRB_ARGS_REQ(1));
 }
 
 void mrb_mitamae_pacman_gem_final(mrb_state *mrb) {

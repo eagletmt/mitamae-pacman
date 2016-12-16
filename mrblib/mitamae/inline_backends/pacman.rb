@@ -18,7 +18,7 @@ module MItamae
       end
 
       def check_package_is_installed(name, version = nil)
-        @handle.installed?(name)
+        @handle.installed?(name) || @handle.group_installed?(name)
       end
 
       def get_package_version(name)
