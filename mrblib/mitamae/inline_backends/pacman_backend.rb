@@ -1,6 +1,6 @@
 module MItamae
   module InlineBackends
-    class Pacman
+    class PacmanBackend
       def initialize
         # FIXME: Detect RootDir and DBPath
         @handle = Alpm::Handle.new('/', '/var/lib/pacman')
